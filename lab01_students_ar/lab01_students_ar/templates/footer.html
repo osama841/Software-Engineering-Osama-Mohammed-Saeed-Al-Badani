@@ -1,0 +1,55 @@
+<!-- Footer -->
+<footer class="bg-dark text-white py-4 mt-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h5>🎓 نظام إدارة الطلاب</h5>
+        <p class="mb-0">
+          نظام متكامل لإدارة الطلاب والمعلمين والمقررات والتسجيلات
+        </p>
+      </div>
+      <div class="col-md-3">
+        <h5>الروابط السريعة</h5>
+        <ul class="list-unstyled">
+          <li>
+            <a href="{% url 'home' %}" class="text-white text-decoration-none"
+              ><i class="fas fa-home me-1"></i> الرئيسية</a
+            >
+          </li>
+          <li>
+            <a
+              href="{% url 'student_list' %}"
+              class="text-white text-decoration-none"
+              ><i class="fas fa-user-graduate me-1"></i> الطلاب</a
+            >
+          </li>
+          <li>
+            <a
+              href="{% url 'teacher_list' %}"
+              class="text-white text-decoration-none"
+              ><i class="fas fa-chalkboard-teacher me-1"></i> المعلمون</a
+            >
+          </li>
+          <li>
+            <a
+              href="{% url 'course_list' %}"
+              class="text-white text-decoration-none"
+              ><i class="fas fa-book me-1"></i> المقررات</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h5>التواصل</h5>
+        <ul class="list-unstyled">
+          <li><i class="fas fa-envelope me-1"></i> admin@studentsystem.edu</li>
+          <li><i class="fas fa-phone me-1"></i> +966 123 456 789</li>
+        </ul>
+      </div>
+    </div>
+    <hr class="my-4" />
+    <div class="text-center">
+      <p class="mb-0">&copy; 2025 نظام إدارة الطلاب. جميع الحقوق محفوظة.</p>
+    </div>
+  </div>
+</footer>

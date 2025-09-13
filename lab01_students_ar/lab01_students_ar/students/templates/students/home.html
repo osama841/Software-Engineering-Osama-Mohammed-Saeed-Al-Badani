@@ -1,0 +1,95 @@
+{% extends 'students/base.html' %} 
+{% block title %}لوحة التحكم{% endblock title %}
+{% block content %}
+<div class="jumbotron bg-primary text-white rounded-3 p-4 mb-4">
+  <div class="container">
+    <h1 class="display-5 fw-bold">مرحباً بك في نظام إدارة الطلاب</h1>
+    <p class="lead">
+      نظام متكامل لإدارة الطلاب والمعلمين والمقررات والتسجيلات الأكاديمية
+    </p>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm border-primary">
+      <div class="card-body text-center">
+        <div class="fs-1 text-primary">👨‍🎓</div>
+        <div class="display-4 fw-bold text-primary">{{ stats.students }}</div>
+        <div class="h5 text-muted">طلاب</div>
+        <a href="{% url 'student_list' %}" class="btn btn-outline-primary mt-2"
+          >عرض الطلاب</a
+        >
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm border-success">
+      <div class="card-body text-center">
+        <div class="fs-1 text-success">📘</div>
+        <div class="display-4 fw-bold text-success">{{ stats.courses }}</div>
+        <div class="h5 text-muted">مقررات</div>
+        <a href="{% url 'course_list' %}" class="btn btn-outline-success mt-2"
+          >عرض المقررات</a
+        >
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm border-info">
+      <div class="card-body text-center">
+        <div class="fs-1 text-info">📝</div>
+        <div class="display-4 fw-bold text-info">{{ stats.enrollments }}</div>
+        <div class="h5 text-muted">تسجيلات</div>
+        <a href="{% url 'enrollment_list' %}" class="btn btn-outline-info mt-2"
+          >عرض التسجيلات</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-header bg-white">
+    <h2 class="h5 mb-0">أكثر المقررات تسجيلًا</h2>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>الكود</th>
+            <th>الاسم</th>
+            <th>عدد التسجيلات</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in top_courses %}
+          <tr>
+            <td>{{ c.code }}</td>
+            <td>{{ c.name }}</td>
+            <td>
+              <span class="badge bg-primary">{{ c.num }}</span>
+            </td>
+            <td>
+              <a
+                href="{% url 'course_update' c.id %}"
+                class="btn btn-sm btn-outline-secondary"
+                >تعديل</a
+              >
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center text-muted">
+              لا توجد بيانات بعد.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,99 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+            href="{% url 'home' %}"
+          >
+            <i class="fas fa-home"></i> الرئيسية
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name in 'student_list,student_create,student_update,student_delete' %}active{% endif %}"
+            href="{% url 'student_list' %}"
+          >
+            <i class="fas fa-user-graduate"></i> الطلاب
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name in 'teacher_list,teacher_create,teacher_update,teacher_delete' %}active{% endif %}"
+            href="{% url 'teacher_list' %}"
+          >
+            <i class="fas fa-chalkboard-teacher"></i> المعلمون
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name in 'course_list,course_create,course_update,course_delete' %}active{% endif %}"
+            href="{% url 'course_list' %}"
+          >
+            <i class="fas fa-book"></i> المقررات
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.resolver_match.url_name in 'enrollment_list,enrollment_create,enrollment_update,enrollment_delete' %}active{% endif %}"
+            href="{% url 'enrollment_list' %}"
+          >
+            <i class="fas fa-clipboard-list"></i> التسجيلات
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="userDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+          >
+            <i class="fas fa-user"></i> {{ user.username }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" href="{% url 'users:profile' %}"
+                ><i class="fas fa-user-circle"></i> ال ملف الشخصي</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item-form">
+                  <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </button>
+              </form>
+            </li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}"
+            ><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'users:register' %}"
+            ><i class="fas fa-user-plus"></i> إنشاء حساب</a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

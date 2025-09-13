@@ -1,0 +1,60 @@
+{% extends 'base.html' %} {% block title %}إنشاء حساب{% endblock %} {% block
+content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h2 class="h4 mb-0">إنشاء حساب جديد</h2>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label"
+              >اسم المستخدم</label
+            >
+            {{ form.username }} {% if form.username.errors %}
+            <div class="text-danger small">
+              {% for error in form.username.errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.password1.id_for_label }}" class="form-label"
+              >كلمة المرور</label
+            >
+            {{ form.password1 }} {% if form.password1.errors %}
+            <div class="text-danger small">
+              {% for error in form.password1.errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-text">
+              <ul>
+                <li>يجب أن تتكون كلمة المرور من 8 أحرف على الأقل</li>
+                <li>لا يمكن أن تكون كلمة المرور شائعة جدًا</li>
+                <li>لا يمكن أن تكون كلمة المرور رقمية بالكامل</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.password2.id_for_label }}" class="form-label"
+              >تأكيد كلمة المرور</label
+            >
+            {{ form.password2 }} {% if form.password2.errors %}
+            <div class="text-danger small">
+              {% for error in form.password2.errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            إنشاء حساب
+          </button>
+        </form>
+        <div class="text-center mt-3">
+          <p>لديك حساب بالفعل؟ <a href="{% url 'login' %}">تسجيل الدخول</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

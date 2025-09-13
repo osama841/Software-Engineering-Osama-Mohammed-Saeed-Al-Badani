@@ -1,0 +1,32 @@
+{% extends 'students/base.html' %} {% block title %}تأكيد الحذف{% endblock %} {%
+block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm border-danger">
+      <div class="card-header bg-danger text-white">
+        <h1 class="h4 mb-0">
+          <i class="fas fa-exclamation-triangle"></i> تأكيد الحذف
+        </h1>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-warning">
+          <i class="fas fa-exclamation-circle"></i>
+          <strong>تحذير!</strong> هذا الإجراء لا يمكن التراجع عنه.
+        </div>
+
+        <p class="mb-4">هل أنت متأكد أنك تريد حذف "{{ object }}"؟</p>
+
+        <form method="post" class="d-flex gap-2">
+          {% csrf_token %}
+          <button class="btn btn-danger" type="submit">
+            <i class="fas fa-trash"></i> نعم، قم بالحذف
+          </button>
+          <a class="btn btn-secondary" href="javascript:history.back()">
+            <i class="fas fa-arrow-right"></i> إلغاء
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

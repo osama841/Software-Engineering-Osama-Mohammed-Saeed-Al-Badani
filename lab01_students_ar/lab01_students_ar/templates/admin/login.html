@@ -1,0 +1,140 @@
+{% extends "admin/base_site.html" %} {% load i18n static %} {% block extrastyle
+%}{{ block.super }}
+<style>
+  #header {
+    background: #2c3e50;
+  }
+
+  .login-box {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .errornote {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+
+  .form-row {
+    margin-bottom: 15px;
+  }
+
+  .form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .form-row input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  .submit-row {
+    text-align: center;
+  }
+
+  .login-btn {
+    background: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .login-btn:hover {
+    background: #2980b9;
+  }
+
+  .back-to-site {
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .back-to-site a {
+    color: #3498db;
+    text-decoration: none;
+  }
+</style>
+{% endblock %} {% block bodyclass %}{{ block.super }} login{% endblock %} {%
+block usertools %}{% endblock %} {% block nav-global %}{% endblock %} {% block
+nav-sidebar %}{% endblock %} {% block content_title %}{% endblock %} {% block
+breadcrumbs %}{% endblock %} {% block content %} {% if user.is_authenticated %}
+<p class="errornote">
+  {% blocktrans trimmed %} You are authenticated as {{ username }}, but are not
+  authorized to access this page. Would you like to login to a different
+  account? {% endblocktrans %}
+</p>
+{% endif %}
+
+<div class="login-box">
+  <h2 style="text-align: center; margin-bottom: 20px; color: #2c3e50">
+    تسجيل الدخول إلى لوحة الإدارة
+  </h2>
+
+  {% if form.errors and not form.non_field_errors %}
+  <p class="errornote">
+    {% if form.errors.items|length == 1 %} {% trans "Please correct the error
+    below." %} {% else %} {% trans "Please correct the errors below." %} {%
+    endif %}
+  </p>
+  {% endif %} {% if form.non_field_errors %} {% for error in
+  form.non_field_errors %}
+  <p class="errornote">{{ error }}</p>
+  {% endfor %} {% endif %}
+
+  <div id="content-main">
+    {% if user.is_authenticated %}
+    <p class="errornote">
+      <strong>تنبيه:</strong> أنت مسجل دخول باسم "{{ user.username }}" ولكنك غير
+      مخول للوصول إلى لوحة الإدارة. يجب أن يكون لديك صلاحيات المسؤول (staff)
+      للوصول إلى هذه الصفحة.
+    </p>
+    <div class="back-to-site">
+      <a href="{% url 'home' %}">العودة إلى الموقع الرئيسي</a>
+    </div>
+    {% else %}
+    <form action="{{ app_path }}" method="post" id="login-form">
+      {% csrf_token %}
+      <div class="form-row">
+        {{ form.username.errors }} {{ form.username.label_tag }} {{
+        form.username }}
+      </div>
+      <div class="form-row">
+        {{ form.password.errors }} {{ form.password.label_tag }} {{
+        form.password }}
+        <input type="hidden" name="next" value="{{ next }}" />
+      </div>
+      {% url 'admin_password_reset' as password_reset_url %} {% if
+      password_reset_url %}
+      <div class="password-reset-link">
+        <a href="{{ password_reset_url }}"
+          >{% trans 'Forgotten your password or username?' %}</a
+        >
+      </div>
+      {% endif %}
+      <div class="submit-row">
+        <input type="submit" value="تسجيل الدخول" class="login-btn" />
+      </div>
+    </form>
+
+    <div class="back-to-site">
+      <p>أو <a href="{% url 'home' %}">العودة إلى الموقع الرئيسي</a></p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

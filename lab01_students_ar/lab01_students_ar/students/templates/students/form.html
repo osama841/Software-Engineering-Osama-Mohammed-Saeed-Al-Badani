@@ -1,0 +1,44 @@
+{% extends 'students/base.html' %} {% block title %}{{ title|default:"نموذج"
+}}{% endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white">
+        <h1 class="h4 mb-0">{{ title|default:"نموذج" }}</h1>
+      </div>
+      <div class="card-body">
+        <form method="post" class="needs-validation" novalidate>
+          {% csrf_token %} {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {% for e in form.non_field_errors %}{{ e }}<br />{% endfor %}
+          </div>
+          {% endif %} {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label"
+              >{{ field.label }}{% if field.field.required %}
+              <span class="text-danger">*</span>{% endif %}</label
+            >
+            {{ field }} {% if field.errors %}
+            <div class="text-danger small">
+              {% for e in field.errors %}{{ e }}<br />{% endfor %}
+            </div>
+            {% endif %} {% if field.help_text %}
+            <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+
+          <div class="d-flex gap-2 mt-4">
+            <button class="btn btn-primary" type="submit">
+              <i class="fas fa-save"></i> حفظ
+            </button>
+            <a class="btn btn-secondary" href="javascript:history.back()">
+              <i class="fas fa-arrow-right"></i> رجوع
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

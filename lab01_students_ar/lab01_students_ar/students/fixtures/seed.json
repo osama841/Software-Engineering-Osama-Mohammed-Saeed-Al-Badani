@@ -1,0 +1,24 @@
+[
+  {"model": "students.student", "pk": 1, "fields": {
+    "first_name": "أحمد", "last_name": "سلمان", "student_id": "S2025001",
+    "email": "ahmed@example.com", "date_of_birth": "2002-01-10"
+  }},
+  {"model": "students.student", "pk": 2, "fields": {
+    "first_name": "ندى", "last_name": "يحيى", "student_id": "S2025002",
+    "email": "nada@example.com", "date_of_birth": "2003-05-20"
+  }},
+
+  {"model": "students.course", "pk": 1, "fields": {
+    "code": "CS101", "name": "مقدمة في علوم الحاسوب", "credit_hours": 3
+  }},
+  {"model": "students.course", "pk": 2, "fields": {
+    "code": "SE201", "name": "هندسة البرمجيات", "credit_hours": 3
+  }},
+
+  {"model": "students.enrollment", "pk": 1, "fields": {
+    "student": 1, "course": 1, "semester": "2025S1", "grade": "A"
+  }},
+  {"model": "students.enrollment", "pk": 2, "fields": {
+    "student": 2, "course": 2, "semester": "2025S1", "grade": "IP"
+  }}
+]

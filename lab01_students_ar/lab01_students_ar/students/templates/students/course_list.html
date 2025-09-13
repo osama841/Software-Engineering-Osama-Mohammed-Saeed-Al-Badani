@@ -1,0 +1,77 @@
+{% extends 'students/base.html' %} {% block title %}قائمة المقررات{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">📚 قائمة المقررات</h1>
+  <a href="{% url 'course_create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> إضافة مقرر جديد
+  </a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-header bg-white">
+    <form method="get" class="mb-0">
+      <div class="input-group">
+        <input
+          type="text"
+          name="q"
+          class="form-control"
+          placeholder="بحث في المقررات..."
+          value="{{ q }}"
+        />
+        <button class="btn btn-outline-primary" type="submit">
+          <i class="fas fa-search"></i> بحث
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card-body">
+    {% if page_obj %}
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>كود المقرر</th>
+            <th>اسم المقرر</th>
+            <th>الساعات المعتمدة</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in page_obj %}
+          <tr>
+            <td>{{ c.code }}</td>
+            <td>{{ c.name }}</td>
+            <td>{{ c.credit_hours }}</td>
+            <td>
+              <div class="d-flex gap-1">
+                <a
+                  class="btn btn-sm btn-outline-primary"
+                  href="{% url 'course_update' c.id %}"
+                >
+                  <i class="fas fa-edit"></i> تعديل
+                </a>
+                <a
+                  class="btn btn-sm btn-outline-danger"
+                  href="{% url 'course_delete' c.id %}"
+                >
+                  <i class="fas fa-trash"></i> حذف
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include 'students/partials/pagination.html' %} {% else %}
+    <div class="alert alert-info text-center">
+      <i class="fas fa-info-circle"></i> لا توجد بيانات للمقررات.
+      <a href="{% url 'course_create' %}" class="alert-link"
+        >أضف مقررًا جديدًا</a
+      >
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

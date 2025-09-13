@@ -1,0 +1,105 @@
+{% extends 'students/base.html' %} {% block title %}قائمة التسجيلات{% endblock
+%} {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">📝 قائمة التسجيلات</h1>
+  <a href="{% url 'enrollment_create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> إضافة تسجيل جديد
+  </a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-header bg-white">
+    <form method="get" class="mb-0">
+      <div class="row g-2">
+        <div class="col-md-5">
+          <input
+            type="text"
+            name="q"
+            class="form-control"
+            placeholder="بحث في الطلاب أو المقررات..."
+            value="{{ q }}"
+          />
+        </div>
+        <div class="col-md-5">
+          <input
+            type="text"
+            name="semester"
+            class="form-control"
+            placeholder="الفصل الدراسي..."
+            value="{{ semester }}"
+          />
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-outline-primary w-100" type="submit">
+            <i class="fas fa-search"></i> بحث
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="card-body">
+    {% if page_obj %}
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>الطالب</th>
+            <th>المقرر</th>
+            <th>الفصل الدراسي</th>
+            <th>التقدير</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in page_obj %}
+          <tr>
+            <td>
+              {{ e.student.first_name }} {{ e.student.last_name }} ({{
+              e.student.student_id }})
+            </td>
+            <td>{{ e.course.code }} - {{ e.course.name }}</td>
+            <td>{{ e.semester }}</td>
+            <td>
+              {% if e.grade %}
+              <span
+                class="badge bg-{% if e.grade == 'A' %}success{% elif e.grade == 'B' %}primary{% elif e.grade == 'C' %}warning{% elif e.grade == 'D' %}info{% elif e.grade == 'F' %}danger{% else %}secondary{% endif %}"
+              >
+                {{ e.grade }}
+              </span>
+              {% else %}
+              <span class="badge bg-secondary">-</span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="d-flex gap-1">
+                <a
+                  class="btn btn-sm btn-outline-primary"
+                  href="{% url 'enrollment_update' e.id %}"
+                >
+                  <i class="fas fa-edit"></i> تعديل
+                </a>
+                <a
+                  class="btn btn-sm btn-outline-danger"
+                  href="{% url 'enrollment_delete' e.id %}"
+                >
+                  <i class="fas fa-trash"></i> حذف
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% include 'students/partials/pagination.html' %} {% else %}
+    <div class="alert alert-info text-center">
+      <i class="fas fa-info-circle"></i> لا توجد بيانات للتسجيلات.
+      <a href="{% url 'enrollment_create' %}" class="alert-link"
+        >أضف تسجيلًا جديدًا</a
+      >
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

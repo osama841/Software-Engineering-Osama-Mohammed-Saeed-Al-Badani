@@ -1,0 +1,52 @@
+{% extends 'base.html' %} {% block title %}الملف الشخصي{% endblock %} {% block
+content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h2 class="h4 mb-0">الملف الشخصي</h2>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3 text-center">
+            <div
+              class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto"
+              style="width: 100px; height: 100px"
+            >
+              <i class="fas fa-user fa-3x text-muted"></i>
+            </div>
+            <h3 class="h5 mt-3">{{ user.username }}</h3>
+            <p class="text-muted">
+              عضو منذ {{ user.date_joined|date:"d/m/Y" }}
+            </p>
+          </div>
+          <div class="col-md-9">
+            <h3 class="h5">معلومات الحساب</h3>
+            <table class="table table-borderless">
+              <tr>
+                <td><strong>اسم المستخدم:</strong></td>
+                <td>{{ user.username }}</td>
+              </tr>
+              <tr>
+                <td><strong>البريد الإلكتروني:</strong></td>
+                <td>{{ user.email|default:"غير متوفر" }}</td>
+              </tr>
+              <tr>
+                <td><strong>تاريخ الانضمام:</strong></td>
+                <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+              </tr>
+              <tr>
+                <td><strong>آخر تسجيل دخول:</strong></td>
+                <td>
+                  {{ user.last_login|date:"d/m/Y H:i"|default:"لم يتم تسجيل
+                  الدخول بعد" }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
