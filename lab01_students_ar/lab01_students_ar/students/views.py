@@ -24,11 +24,36 @@ from .forms import (
     TeacherForm
 )
 
+# ============================
+# Decorators
+# ============================
+from .decorators import student_required, teacher_required, admin_required
 
 # ============================
 # الصفحة الرئيسية
 # ============================
 def home(request):
+    # For authenticated students, show their profile summary
+    if request.user.is_authenticated and hasattr(request.user, 'profile') and request.user.profile.is_student():
+        try:
+            student = request.user.profile.student
+            if student:
+                # Get student's enrollments count
+                enrollments_count = student.enrollments.count()
+                
+                # Get student's courses
+                courses = student.enrollments.select_related('course').values_list('course__name', flat=True).distinct()
+                
+                context = {
+                    'student': student,
+                    'enrollments_count': enrollments_count,
+                    'courses': courses,
+                }
+                return render(request, 'students/student_home.html', context)
+        except:
+            pass
+    
+    # For admins or other users, show the general dashboard
     stats = {
         'students': Student.objects.count(),
         'courses': Course.objects.count(),
@@ -43,7 +68,7 @@ def home(request):
 # ===================================================================
 
 # ---------- قائمة الطلاب ----------
-@login_required(login_url='/users/login/')
+@admin_required
 def student_list(request):
     q = request.GET.get('q') or ''
     students = Student.objects.all()
@@ -59,7 +84,7 @@ def student_list(request):
 
 
 # ---------- إنشاء/تعديل ----------
-@login_required(login_url='/users/login/')
+@admin_required
 def student_create(request):
     """
     إنشاء طالب
@@ -71,7 +96,7 @@ def student_create(request):
         return redirect("student_list")
     return render(request, "students/form.html", {"form": form, "title": "إضافة طالب"})
 
-@login_required(login_url='/users/login/')
+@admin_required
 def student_update(request, pk):
     """
     تعديل طالب
@@ -86,6 +111,7 @@ def student_update(request, pk):
             student.student_id = cd["student_id"]
             student.email      = cd["email"]
             student.date_of_birth = cd.get("date_of_birth")
+            student.level      = cd.get("level")
             student.save()
             messages.success(request, "تم تحديث الطالب")
             return redirect("student_list")
@@ -96,10 +122,11 @@ def student_update(request, pk):
             "student_id": student.student_id,
             "email":      student.email,
             "date_of_birth": student.date_of_birth,
+            "level":      student.level,
         })
     return render(request, "students/form.html", {"form": form, "title": "تعديل طالب"})
 
-@login_required(login_url='/users/login/')
+@admin_required
 def student_delete(request, pk):
     """
     حذف طالب
@@ -113,7 +140,7 @@ def student_delete(request, pk):
 
 
 # ---------- تصدير CSV ----------
-@login_required(login_url='/users/login/')
+@admin_required
 def students_export_csv(request):
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename=students.csv'
@@ -140,7 +167,7 @@ def course_list(request):
     
 
 # ---------- إنشاء/تعديل ----------
-@login_required(login_url='/users/login/')
+@admin_required
 def course_create(request):
     """
     إنشاء مقرر
@@ -152,7 +179,7 @@ def course_create(request):
         return redirect("course_list")
     return render(request, "students/form.html", {"form": form, "title": "إضافة مقرر"})
 
-@login_required(login_url='/users/login/')
+@admin_required
 def course_update(request, pk):
     """
     تعديل مقرر
@@ -176,7 +203,7 @@ def course_update(request, pk):
         })
     return render(request, "students/form.html", {"form": form, "title": "تعديل مقرر"})
 
-@login_required(login_url='/users/login/')
+@admin_required
 def course_delete(request, pk):
     """
     حذف مقرر
@@ -214,7 +241,7 @@ def enrollment_list(request):
 
 
 # ---------- إنشاء/تعديل ----------
-@login_required(login_url='/users/login/')
+@admin_required
 def enrollment_create(request):
     """
     إنشاء تسجيل
@@ -231,7 +258,7 @@ def enrollment_create(request):
         return redirect("enrollment_list")
     return render(request, "students/form.html", {"form": form, "title": "إضافة تسجيل"})
 
-@login_required(login_url='/users/login/')
+@admin_required
 def enrollment_update(request, pk):
     """
     تعديل تسجيل
@@ -256,7 +283,7 @@ def enrollment_update(request, pk):
         })
     return render(request, "students/form.html", {"form": form, "title": "تعديل تسجيل"})
 
-@login_required(login_url='/users/login/')
+@admin_required
 def enrollment_delete(request, pk):
     """
     حذف تسجيل
@@ -267,6 +294,36 @@ def enrollment_delete(request, pk):
         messages.success(request, 'تم حذف التسجيل')
         return redirect('enrollment_list')
     return render(request, 'students/confirm_delete.html', {'object': obj})
+
+
+# ===================================================================
+#                         Student Profile
+# ===================================================================
+
+@student_required
+def student_profile(request):
+    """
+    View for students to see their own profile and enrollments
+    """
+    # Get the student profile linked to the current user
+    try:
+        student = request.user.profile.student
+        if not student:
+            messages.error(request, 'لم يتم ربط حسابك بطالب.')
+            return redirect('home')
+    except:
+        messages.error(request, 'لم يتم ربط حسابك بطالب.')
+        return redirect('home')
+    
+    # Get student's enrollments
+    enrollments = student.enrollments.select_related('course').all()
+    
+    context = {
+        'student': student,
+        'enrollments': enrollments,
+    }
+    
+    return render(request, 'students/student_profile.html', context)
 
 
 # ===================================================================
@@ -290,7 +347,7 @@ def teacher_list(request):
 
 
 # ---------- إنشاء/تعديل ----------
-@login_required(login_url='/users/login/')
+@admin_required
 def teacher_create(request):
     """
     إنشاء معلّم
@@ -306,7 +363,7 @@ def teacher_create(request):
             return redirect("teacher_list")
     return render(request, "students/teachers/from.html", {"form": form, "title": "إضافة معلّم"})
 
-@login_required(login_url='/users/login/')
+@admin_required
 def teacher_update(request, pk):
     """
     تعديل معلّم
@@ -338,7 +395,7 @@ def teacher_update(request, pk):
         })
     return render(request, "students/teachers/from.html", {"form": form, "title": "تعديل معلّم"})
 
-@login_required(login_url='/users/login/')
+@admin_required
 def teacher_delete(request, pk):
     """
     حذف معلّم

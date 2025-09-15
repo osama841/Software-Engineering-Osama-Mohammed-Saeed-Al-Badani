@@ -1,0 +1,130 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}تفاصيل الطالب{% endblock %}
+{% block page_title %}تفاصيل الطالب: {{ student.first_name }} {{ student.last_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">معلومات الطالب</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td><strong>رقم الطالب:</strong></td>
+                        <td>{{ student.student_id }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>الاسم الأول:</strong></td>
+                        <td>{{ student.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>اسم العائلة:</strong></td>
+                        <td>{{ student.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>البريد الإلكتروني:</strong></td>
+                        <td>{{ student.email }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>تاريخ الميلاد:</strong></td>
+                        <td>{{ student.date_of_birth|date:"d/m/Y"|default:"غير محدد" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>المستوى:</strong></td>
+                        <td>{{ student.level|default:"غير محدد" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>حالة الاعتماد:</strong></td>
+                        <td>
+                            {% if student.approval_status == 'approved' %}
+                                <span class="badge bg-success">معتمد</span>
+                            {% elif student.approval_status == 'pending' %}
+                                <span class="badge bg-warning">قيد المراجعة</span>
+                            {% else %}
+                                <span class="badge bg-danger">مرفوض</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>تاريخ الإنشاء:</strong></td>
+                        <td>{{ student.created_at|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% if student.approved_at %}
+                    <tr>
+                        <td><strong>تاريخ الاعتماد:</strong></td>
+                        <td>{{ student.approved_at|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+                
+                <div class="d-grid gap-2">
+                    {% if student.approval_status == 'pending' %}
+                        <a href="{% url 'admin_panel:approve_student' student.id %}" class="btn btn-success">
+                            <i class="fas fa-check"></i> اعتماد
+                        </a>
+                        <a href="{% url 'admin_panel:reject_student' student.id %}" class="btn btn-danger">
+                            <i class="fas fa-times"></i> رفض
+                        </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'admin_panel:edit_student' student.id %}" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> تعديل
+                    </a>
+                    <a href="{% url 'admin_panel:delete_student' student.id %}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> حذف
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">التسجيلات الأكاديمية</h5>
+            </div>
+            <div class="card-body">
+                {% if enrollments %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>المقرر</th>
+                                    <th>الفصل</th>
+                                    <th>التقدير</th>
+                                    <th>حالة الطلب</th>
+                                    <th>تاريخ الطلب</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enrollment in enrollments %}
+                                <tr>
+                                    <td>{{ enrollment.course.code }} - {{ enrollment.course.name }}</td>
+                                    <td>{{ enrollment.semester }}</td>
+                                    <td>{{ enrollment.get_grade_display }}</td>
+                                    <td>
+                                        {% if enrollment.request_status == 'approved' %}
+                                            <span class="badge bg-success">معتمد</span>
+                                        {% elif enrollment.request_status == 'requested' %}
+                                            <span class="badge bg-warning">قيد المراجعة</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">مرفوض</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ enrollment.request_date|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">لا توجد تسجيلات أكاديمية لهذا الطالب.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

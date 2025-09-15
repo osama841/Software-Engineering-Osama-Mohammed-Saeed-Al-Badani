@@ -1,5 +1,7 @@
-{% extends 'base.html' %} {% block title %}الملف الشخصي{% endblock %} {% block
-content %}
+{% extends 'base.html' %} 
+{% block title %}الملف الشخصي{% endblock %} 
+
+{% block content %}
 <div class="row justify-content-center">
   <div class="col-md-8">
     <div class="card shadow-sm">
@@ -32,6 +34,10 @@ content %}
                 <td>{{ user.email|default:"غير متوفر" }}</td>
               </tr>
               <tr>
+                <td><strong>نوع المستخدم:</strong></td>
+                <td>{{ user.profile.get_user_type_display }}</td>
+              </tr>
+              <tr>
                 <td><strong>تاريخ الانضمام:</strong></td>
                 <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
               </tr>
@@ -43,6 +49,58 @@ content %}
                 </td>
               </tr>
             </table>
+            
+            <!-- Student-specific information -->
+            {% if user.profile.is_student and student %}
+            <hr>
+            <h3 class="h5">معلومات الطالب</h3>
+            <table class="table table-borderless">
+              <tr>
+                <td><strong>رقم الطالب:</strong></td>
+                <td>{{ student.student_id }}</td>
+              </tr>
+              <tr>
+                <td><strong>الاسم الكامل:</strong></td>
+                <td>{{ student.first_name }} {{ student.last_name }}</td>
+              </tr>
+              <tr>
+                <td><strong>البريد الإلكتروني:</strong></td>
+                <td>{{ student.email }}</td>
+              </tr>
+              <tr>
+                <td><strong>تاريخ الميلاد:</strong></td>
+                <td>{{ student.date_of_birth|date:"d/m/Y"|default:"غير متوفر" }}</td>
+              </tr>
+            </table>
+            
+            <!-- Student enrollments -->
+            <hr>
+            <h3 class="h5">التسجيلات الأكاديمية</h3>
+            {% if enrollments %}
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>المقرر</th>
+                    <th>الفصل</th>
+                    <th>التقدير</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for enrollment in enrollments %}
+                  <tr>
+                    <td>{{ enrollment.course.code }} - {{ enrollment.course.name }}</td>
+                    <td>{{ enrollment.semester }}</td>
+                    <td>{{ enrollment.get_grade_display }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <p class="text-muted">لا توجد تسجيلات أكاديمية حتى الآن.</p>
+            {% endif %}
+            {% endif %}
           </div>
         </div>
       </div>

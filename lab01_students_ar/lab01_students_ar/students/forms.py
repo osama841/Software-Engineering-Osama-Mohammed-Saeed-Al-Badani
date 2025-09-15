@@ -13,6 +13,8 @@ class StudentForm(forms.Form):
                                    widget=forms.EmailInput(attrs={"class": "form-control"}))
     date_of_birth = forms.DateField(label="تاريخ الميلاد", required=False,
                                    widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}))
+    level        = forms.CharField(label="المستوى", max_length=50, required=False,
+                                   widget=forms.TextInput(attrs={"class": "form-control"}))
 
 # --------- Course: Regular Form ---------
 class CourseForm(forms.Form):

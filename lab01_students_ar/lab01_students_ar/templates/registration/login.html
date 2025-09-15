@@ -1,45 +1,182 @@
-{% extends 'base.html' %} 
-{% block title %}تسجيل الدخول{% endblock %} 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - نظام إدارة الطلاب</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+        }
+        .login-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .login-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .login-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        .form-control {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 10px;
+            padding: 12px 15px;
+        }
+        .form-control:focus {
+            background: rgba(255,255,255,0.2);
+            border-color: #ffd700;
+            color: white;
+            box-shadow: 0 0 0 0.2rem rgba(255,215,0,0.25);
+        }
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        .form-label {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .btn-login {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            border: none;
+            color: #333;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+            color: #333;
+        }
+        .btn-register {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .btn-register:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .back-link:hover {
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    {% extends 'base.html' %}
 
-{% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card shadow-sm">
-      <div class="card-header bg-primary text-white">
-        <h2 class="h4 mb-0">تسجيل الدخول</h2>
-      </div>
-      <div class="card-body">
-        <form method="post">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="{{ form.username.id_for_label }}" class="form-label"
-              >اسم المستخدم</label
-            >
-            {{ form.username }}
+    {% block title %}تسجيل الدخول{% endblock %}
+
+    {% block content %}
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card shadow">
+            <div class="card-header text-center bg-primary text-white">
+              <h3><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</h3>
+            </div>
+            <div class="card-body">
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+              
+              <form method="post">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                  <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                  </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                  <label for="{{ form.username.id_for_label }}" class="form-label">اسم المستخدم</label>
+                  {{ form.username }}
+                  {% if form.username.errors %}
+                    <div class="text-danger">{{ form.username.errors }}</div>
+                  {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                  <label for="{{ form.password.id_for_label }}" class="form-label">كلمة المرور</label>
+                  {{ form.password }}
+                  {% if form.password.errors %}
+                    <div class="text-danger">{{ form.password.errors }}</div>
+                  {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                  <label for="{{ form.user_type.id_for_label }}" class="form-label">نوع المستخدم</label>
+                  {{ form.user_type }}
+                  {% if form.user_type.errors %}
+                    <div class="text-danger">{{ form.user_type.errors }}</div>
+                  {% endif %}
+                </div>
+                
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                  </button>
+                </div>
+              </form>
+              
+              <div class="text-center mt-3">
+                <a href="{% url 'home' %}" class="btn btn-link">
+                  <i class="fas fa-arrow-left"></i> العودة إلى الصفحة الرئيسية
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="{{ form.password.id_for_label }}" class="form-label"
-              >كلمة المرور</label
-            >
-            {{ form.password }}
-          </div>
-          {% if form.errors %}
-          <div class="alert alert-danger">
-            <strong>خطأ!</strong> اسم المستخدم أو كلمة المرور غير صحيحة.
-          </div>
-          {% endif %}
-          <button type="submit" class="btn btn-primary w-100">
-            تسجيل الدخول
-          </button>
-        </form>
-        <div class="text-center mt-3">
-          <p>
-            ليس لديك حساب؟
-            <a href="{% url 'users:register' %}">إنشاء حساب جديد</a>
-          </p>
         </div>
       </div>
     </div>
-  </div>
-</div>
-{% endblock %}
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}تفاصيل المعلم{% endblock %}
+{% block page_title %}تفاصيل المعلم: {{ teacher.first_name }} {{ teacher.last_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">معلومات المعلم</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td><strong>الاسم الأول:</strong></td>
+                        <td>{{ teacher.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>اسم العائلة:</strong></td>
+                        <td>{{ teacher.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>البريد الإلكتروني:</strong></td>
+                        <td>{{ teacher.email }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>الجوال:</strong></td>
+                        <td>{{ teacher.phone|default:"غير محدد" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>القسم:</strong></td>
+                        <td>{{ teacher.department|default:"غير محدد" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>تاريخ الإنشاء:</strong></td>
+                        <td>{{ teacher.created_at|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                </table>
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'admin_panel:edit_teacher' teacher.id %}" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> تعديل
+                    </a>
+                    <a href="{% url 'admin_panel:delete_teacher' teacher.id %}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> حذف
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">المقررات المسؤولة عنها</h5>
+            </div>
+            <div class="card-body">
+                {% if courses %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>كود المقرر</th>
+                                    <th>اسم المقرر</th>
+                                    <th>الساعات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in courses %}
+                                <tr>
+                                    <td>{{ course.code }}</td>
+                                    <td>{{ course.name }}</td>
+                                    <td>{{ course.credit_hours }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">هذا المعلم غير مسؤول عن أي مقررات حالياً.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,17 +1,13 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LoginView
 from . import views
+from .views import CustomLoginView
 
 app_name = 'users'
 
 urlpatterns = [
-    # Login and Logout
-    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    
-    # Registration
-    path('register/', views.register, name='register'),
-    
-    # Profile
+    path('', views.register, name='register'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('dashboard/', views.dashboard_redirect, name='dashboard_redirect'),
     path('profile/', views.profile, name='profile'),
 ]

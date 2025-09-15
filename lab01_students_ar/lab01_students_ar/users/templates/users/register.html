@@ -1,60 +1,246 @@
-{% extends 'base.html' %} {% block title %}إنشاء حساب{% endblock %} {% block
-content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card shadow-sm">
-      <div class="card-header bg-primary text-white">
-        <h2 class="h4 mb-0">إنشاء حساب جديد</h2>
-      </div>
-      <div class="card-body">
-        <form method="post">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="{{ form.username.id_for_label }}" class="form-label"
-              >اسم المستخدم</label
-            >
-            {{ form.username }} {% if form.username.errors %}
-            <div class="text-danger small">
-              {% for error in form.username.errors %}{{ error }}{% endfor %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب طالب جديد - نظام إدارة الطلاب</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+        }
+        .register-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .register-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .register-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .register-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        .form-control {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 10px;
+            padding: 12px 15px;
+        }
+        .form-control:focus {
+            background: rgba(255,255,255,0.2);
+            border-color: #ffd700;
+            color: white;
+            box-shadow: 0 0 0 0.2rem rgba(255,215,0,0.25);
+        }
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        .form-label {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .btn-register {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            border: none;
+            color: #333;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+            color: #333;
+        }
+        .btn-login {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .btn-login:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .back-link:hover {
+            color: #ffd700;
+        }
+        .form-text {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+        .requirements {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .requirements h6 {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .requirements ul {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="register-container">
+                    <div class="register-header">
+                        <h1 class="register-title">
+                            <i class="fas fa-user-plus"></i>
+                        </h1>
+                        <h2 class="register-title">إنشاء حساب طالب</h2>
+                        <p class="register-subtitle">ابدأ رحلتك التعليمية معنا</p>
+                    </div>
+
+                    <!-- Requirements -->
+                    <div class="requirements">
+                        <h6><i class="fas fa-info-circle"></i> متطلبات إنشاء الحساب:</h6>
+                        <ul>
+                            <li>اسم المستخدم يجب أن يكون فريداً</li>
+                            <li>كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل</li>
+                            <li>سيتم إنشاء رقم طالب تلقائياً</li>
+                            <li>ستحتاج لإكمال ملفك الشخصي بعد التسجيل</li>
+                        </ul>
+                    </div>
+
+                    <!-- Messages -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <!-- Registration Form -->
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">
+                                <i class="fas fa-user"></i> اسم المستخدم
+                            </label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.username.errors %}
+                                        <small>{{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">اسم المستخدم سيكون هو معرفك في النظام</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_password1" class="form-label">
+                                <i class="fas fa-lock"></i> كلمة المرور
+                            </label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.password1.errors %}
+                                        <small>{{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">يجب أن تحتوي على 8 أحرف على الأقل</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_password2" class="form-label">
+                                <i class="fas fa-lock"></i> تأكيد كلمة المرور
+                            </label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="text-danger mt-1">
+                                    {% for error in form.password2.errors %}
+                                        <small>{{ error }}</small><br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">أعد كتابة كلمة المرور للتأكيد</div>
+                        </div>
+
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-register">
+                                <i class="fas fa-user-plus"></i> إنشاء الحساب
+                            </button>
+                        </div>
+
+                        <div class="d-grid gap-2 mb-3">
+                            <a href="{% url 'login' %}" class="btn btn-login">
+                                <i class="fas fa-sign-in-alt"></i> لدي حساب بالفعل
+                            </a>
+                        </div>
+
+                        <div class="text-center">
+                            <a href="{% url 'home' %}" class="back-link">
+                                <i class="fas fa-arrow-right"></i> العودة للصفحة الرئيسية
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            {% endif %}
-          </div>
-          <div class="mb-3">
-            <label for="{{ form.password1.id_for_label }}" class="form-label"
-              >كلمة المرور</label
-            >
-            {{ form.password1 }} {% if form.password1.errors %}
-            <div class="text-danger small">
-              {% for error in form.password1.errors %}{{ error }}{% endfor %}
-            </div>
-            {% endif %}
-            <div class="form-text">
-              <ul>
-                <li>يجب أن تتكون كلمة المرور من 8 أحرف على الأقل</li>
-                <li>لا يمكن أن تكون كلمة المرور شائعة جدًا</li>
-                <li>لا يمكن أن تكون كلمة المرور رقمية بالكامل</li>
-              </ul>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="{{ form.password2.id_for_label }}" class="form-label"
-              >تأكيد كلمة المرور</label
-            >
-            {{ form.password2 }} {% if form.password2.errors %}
-            <div class="text-danger small">
-              {% for error in form.password2.errors %}{{ error }}{% endfor %}
-            </div>
-            {% endif %}
-          </div>
-          <button type="submit" class="btn btn-primary w-100">
-            إنشاء حساب
-          </button>
-        </form>
-        <div class="text-center mt-3">
-          <p>لديك حساب بالفعل؟ <a href="{% url 'login' %}">تسجيل الدخول</a></p>
         </div>
-      </div>
     </div>
-  </div>
-</div>
-{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add styling to form fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.classList.add('form-control');
+                if (input.type === 'password') {
+                    input.placeholder = input.id.includes('1') ? 'أدخل كلمة المرور' : 'أكد كلمة المرور';
+                } else if (input.type === 'text') {
+                    input.placeholder = 'أدخل اسم المستخدم';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

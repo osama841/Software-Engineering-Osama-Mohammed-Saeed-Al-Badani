@@ -1,53 +1,147 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>انطباع عن مقرر جانغو</title>
-</head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; border-collapse: collapse; margin: 20px auto; border: 1px solid #dddddd; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-        <tr>
-            <td align="center" bgcolor="#4A90E2" style="padding: 30px 0; color: #ffffff; font-size: 28px; font-weight: bold; border-bottom: 5px solid #357ABD;">
-                انطباع وتقييم مقرر جانغو
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#ffffff" style="padding: 40px 30px;">
-                <h2 style="color: #333333; margin: 0 0 20px 0; font-size: 22px;">رسالة من الطالب: أسامة محمد</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>انطباع عن مقرر</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    "
+  >
+    <table
+      align="center"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      width="100%"
+      style="
+        max-width: 600px;
+        border-collapse: collapse;
+        margin: 20px auto;
+        border: 1px solid #dddddd;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      "
+    >
+      <tr>
+        <td
+          align="center"
+          bgcolor="#4A90E2"
+          style="
+            padding: 30px 0;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+            border-bottom: 5px solid #357abd;
+          "
+        >
+          انطباع وتقييم مقرر
+        </td>
+      </tr>
+      <tr>
+        <td bgcolor="#ffffff" style="padding: 40px 30px">
+          <h2 style="color: #333333; margin: 0 0 20px 0; font-size: 22px">
+            رسالة من الطالب: {{ student_name }}
+          </h2>
+          <p style="color: #555555; font-size: 16px; line-height: 1.7">
+            <strong>البريد الإلكتروني:</strong> {{ email }}<br />
+            <strong>اسم المقرر:</strong> {{ course_name }}<br />
+            <strong>مدى الفهم:</strong>
+            {% if understanding_level == 'excellent' %}ممتاز {% elif
+            understanding_level == 'good' %}جيد {% elif understanding_level ==
+            'average' %}متوسط {% elif understanding_level == 'poor' %}ضعيف {%
+            endif %}
+          </p>
 
-                <h3 style="color: #4A90E2; border-bottom: 2px solid #eeeeee; padding-bottom: 5px; margin-top: 30px;">انطباعي عن المقرر ومدى فهمي:</h3>
-                <p style="color: #555555; font-size: 16px; line-height: 1.7;">
-                    بصدق، أعتبر مقرر "هندسة برمجيات - جانغو" نقطة تحول محورية في مسيرتي التعليمية...
-                </p>
+          <h3
+            style="
+              color: #4a90e2;
+              border-bottom: 2px solid #eeeeee;
+              padding-bottom: 5px;
+              margin-top: 30px;
+            "
+          >
+            الإيجابيات:
+          </h3>
+          <p style="color: #555555; font-size: 16px; line-height: 1.7">
+            {{ positives|linebreaksbr }}
+          </p>
 
-                <h3 style="color: #4A90E2; border-bottom: 2px solid #eeeeee; padding-bottom: 5px; margin-top: 30px;">الإيجابيات والسلبيات:</h3>
-                <p style="color: #555555; font-size: 16px; line-height: 1.7;">
-                    <b>الإيجابيات:</b> ...<br><br>
-                    <b>السلبيات:</b> ...
-                </p>
+          <h3
+            style="
+              color: #4a90e2;
+              border-bottom: 2px solid #eeeeee;
+              padding-bottom: 5px;
+              margin-top: 30px;
+            "
+          >
+            السلبيات:
+          </h3>
+          <p style="color: #555555; font-size: 16px; line-height: 1.7">
+            {{ negatives|linebreaksbr }}
+          </p>
 
-                <h3 style="color: #4A90E2; border-bottom: 2px solid #eeeeee; padding-bottom: 5px; margin-top: 30px;">ماذا لو عدنا من جديد، ماذا تتمنى أن يتحسن؟</h3>
-                <p style="color: #555555; font-size: 16px; line-height: 1.7;">
-                    ...
-                </p>
+          <h3
+            style="
+              color: #4a90e2;
+              border-bottom: 2px solid #eeeeee;
+              padding-bottom: 5px;
+              margin-top: 30px;
+            "
+          >
+            ما الذي يمكن تحسينه:
+          </h3>
+          <p style="color: #555555; font-size: 16px; line-height: 1.7">
+            {{ improvements|linebreaksbr }}
+          </p>
 
-                <h3 style="color: #4A90E2; border-bottom: 2px solid #eeeeee; padding-bottom: 5px; margin-top: 30px;">مقارنة بين المقررات:</h3>
-                <p style="color: #555555; font-size: 16px; line-height: 1.7;">
-                    ...
-                </p>
+          <h3
+            style="
+              color: #4a90e2;
+              border-bottom: 2px solid #eeeeee;
+              padding-bottom: 5px;
+              margin-top: 30px;
+            "
+          >
+            مقارنة مع مقررات أخرى:
+          </h3>
+          <p style="color: #555555; font-size: 16px; line-height: 1.7">
+            {{ comparison|linebreaksbr }}
+          </p>
 
-                <h3 style="color: #4A90E2; border-bottom: 2px solid #eeeeee; padding-bottom: 5px; margin-top: 30px;">هل حابب تشوفه في مقرر آخر؟</h3>
-                <p style="color: #555555; font-size: 16px; line-height: 1.7;">
-                    ...
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#eeeeee" style="padding: 20px 30px; text-align: center; color: #888888; font-size: 14px; border-top: 1px solid #dddddd;">
-                تاريخ الإرسال: {{ today|date:"d F Y" }}
-            </td>
-        </tr>
+          <h3
+            style="
+              color: #4a90e2;
+              border-bottom: 2px solid #eeeeee;
+              padding-bottom: 5px;
+              margin-top: 30px;
+            "
+          >
+            هل تود استخدام هذه التقنية في مقررات أخرى:
+          </h3>
+          <p style="color: #555555; font-size: 16px; line-height: 1.7">
+            {{ future_use|linebreaksbr }}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td
+          bgcolor="#eeeeee"
+          style="
+            padding: 20px 30px;
+            text-align: center;
+            color: #888888;
+            font-size: 14px;
+            border-top: 1px solid #dddddd;
+          "
+        >
+          تاريخ الإرسال: {{ today|date:"d F Y" }}
+        </td>
+      </tr>
     </table>
-</body>
+  </body>
 </html>

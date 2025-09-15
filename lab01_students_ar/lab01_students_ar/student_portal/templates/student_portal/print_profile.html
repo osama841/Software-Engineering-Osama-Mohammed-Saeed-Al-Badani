@@ -1,0 +1,135 @@
+{% extends 'student_portal/base.html' %}
+
+{% block title %}طباعة الملف الشخصي{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>ملف الطالب</h2>
+                <button class="btn btn-primary" onclick="window.print()">
+                    <i class="fas fa-print"></i> طباعة
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">معلومات الطالب</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>رقم الطالب:</strong></td>
+                                    <td>{{ student.student_id }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>الاسم الأول:</strong></td>
+                                    <td>{{ student.first_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>اسم العائلة:</strong></td>
+                                    <td>{{ student.last_name }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>البريد الإلكتروني:</strong></td>
+                                    <td>{{ student.email }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>تاريخ الميلاد:</strong></td>
+                                    <td>{{ student.date_of_birth|date:"d/m/Y"|default:"غير محدد" }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>المستوى:</strong></td>
+                                    <td>{{ student.level|default:"غير محدد" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">التسجيلات الأكاديمية</h4>
+                </div>
+                <div class="card-body">
+                    {% if enrollments %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>كود المقرر</th>
+                                        <th>اسم المقرر</th>
+                                        <th>الفصل</th>
+                                        <th>المعلم المسؤول</th>
+                                        <th>الساعات</th>
+                                        <th>التقدير</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for enrollment in enrollments %}
+                                    <tr>
+                                        <td>{{ enrollment.course.code }}</td>
+                                        <td>{{ enrollment.course.name }}</td>
+                                        <td>{{ enrollment.semester }}</td>
+                                        <td>
+                                            {% if enrollment.course.teacher %}
+                                                {{ enrollment.course.teacher.first_name }} {{ enrollment.course.teacher.last_name }}
+                                            {% else %}
+                                                غير محدد
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ enrollment.course.credit_hours }}</td>
+                                        <td>{{ enrollment.get_grade_display }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">لا توجد تسجيلات أكاديمية.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .btn {
+        display: none !important;
+    }
+    
+    .card-header {
+        background-color: #007bff !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+    
+    body {
+        font-size: 12px;
+    }
+    
+    h2, h4 {
+        font-size: 16px;
+    }
+}
+</style>
+{% endblock %}

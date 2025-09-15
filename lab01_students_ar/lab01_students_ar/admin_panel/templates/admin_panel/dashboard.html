@@ -1,0 +1,150 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}لوحة البيانات{% endblock %}
+{% block page_title %}لوحة البيانات{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">الطلاب</h5>
+                        <h2>{{ total_students }}</h2>
+                    </div>
+                    <i class="fas fa-user-graduate fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">المعلمون</h5>
+                        <h2>{{ total_teachers }}</h2>
+                    </div>
+                    <i class="fas fa-chalkboard-teacher fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">المقررات</h5>
+                        <h2>{{ total_courses }}</h2>
+                    </div>
+                    <i class="fas fa-book fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">التسجيلات</h5>
+                        <h2>{{ total_enrollments }}</h2>
+                    </div>
+                    <i class="fas fa-file-alt fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">الطلاب قيد المراجعة</h5>
+            </div>
+            <div class="card-body">
+                <h1 class="display-4 text-center">{{ pending_students }}</h1>
+                <div class="text-center">
+                    <a href="{% url 'admin_panel:student_list' %}?status=pending" class="btn btn-primary">
+                        <i class="fas fa-eye"></i> عرض التفاصيل
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">طلبات التسجيل قيد المراجعة</h5>
+            </div>
+            <div class="card-body">
+                <h1 class="display-4 text-center">{{ pending_enrollments }}</h1>
+                <div class="text-center">
+                    <a href="{% url 'admin_panel:enrollment_requests' %}?status=requested" class="btn btn-primary">
+                        <i class="fas fa-eye"></i> عرض التفاصيل
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">أحدث عمليات التدقيق</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_audit_logs %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>المستخدم</th>
+                                    <th>الإجراء</th>
+                                    <th>النموذج</th>
+                                    <th>الوصف</th>
+                                    <th>التاريخ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in recent_audit_logs %}
+                                <tr>
+                                    <td>{{ log.user.username }}</td>
+                                    <td>
+                                        {% if log.action == 'create' %}
+                                            <span class="badge bg-success">إنشاء</span>
+                                        {% elif log.action == 'update' %}
+                                            <span class="badge bg-info">تحديث</span>
+                                        {% elif log.action == 'delete' %}
+                                            <span class="badge bg-danger">حذف</span>
+                                        {% elif log.action == 'approve' %}
+                                            <span class="badge bg-primary">اعتماد</span>
+                                        {% elif log.action == 'reject' %}
+                                            <span class="badge bg-warning">رفض</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ log.model_name }}</td>
+                                    <td>{{ log.description }}</td>
+                                    <td>{{ log.timestamp|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">لا توجد عمليات تدقيق حديثة.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

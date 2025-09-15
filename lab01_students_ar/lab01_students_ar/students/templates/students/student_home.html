@@ -1,0 +1,75 @@
+{% extends 'students/base.html' %} 
+{% block title %}مرحباً {{ student.first_name }}{% endblock %} 
+
+{% block content %}
+<div class="jumbotron bg-primary text-white rounded-3 p-4 mb-4">
+  <div class="container">
+    <h1 class="display-5 fw-bold">مرحباً بك، {{ student.first_name }} {{ student.last_name }}</h1>
+    <p class="lead">
+      في نظام إدارة الطلاب
+    </p>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm border-primary">
+      <div class="card-body text-center">
+        <div class="fs-1 text-primary">📘</div>
+        <div class="display-4 fw-bold text-primary">{{ enrollments_count }}</div>
+        <div class="h5 text-muted">تسجيلات أكاديمية</div>
+        <a href="{% url 'enrollment_list' %}" class="btn btn-outline-primary mt-2"
+          >عرض التسجيلات</a
+        >
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm border-success">
+      <div class="card-body">
+        <h3 class="h5">المقررات المسجلة</h3>
+        {% if courses %}
+        <ul class="list-group list-group-flush">
+          {% for course in courses %}
+          <li class="list-group-item">{{ course }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">لا توجد مقررات مسجلة بعد.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-header bg-white">
+    <h2 class="h5 mb-0">معلوماتي</h2>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-borderless">
+          <tr>
+            <td><strong>رقم الطالب:</strong></td>
+            <td>{{ student.student_id }}</td>
+          </tr>
+          <tr>
+            <td><strong>البريد الإلكتروني:</strong></td>
+            <td>{{ student.email }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <table class="table table-borderless">
+          <tr>
+            <td><strong>تاريخ الميلاد:</strong></td>
+            <td>{{ student.date_of_birth|date:"d/m/Y"|default:"غير متوفر" }}</td>
+          </tr>
+        </table>
+        <a href="{% url 'student_profile' %}" class="btn btn-primary">عرض التفاصيل</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

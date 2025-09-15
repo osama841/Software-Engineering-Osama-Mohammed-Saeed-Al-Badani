@@ -1,0 +1,63 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}اعتماد التسجيل{% endblock %}
+{% block page_title %}اعتماد التسجيل{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">اعتماد تسجيل الطالب في المقرر</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>الطالب:</strong></td>
+                                <td>{{ enrollment.student.first_name }} {{ enrollment.student.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>رقم الطالب:</strong></td>
+                                <td>{{ enrollment.student.student_id }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>المقرر:</strong></td>
+                                <td>{{ enrollment.course.code }} - {{ enrollment.course.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>الفصل:</strong></td>
+                                <td>{{ enrollment.semester }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.grade.id_for_label }}" class="form-label">التقدير (اختياري)</label>
+                        {{ form.grade }}
+                        {% if form.grade.errors %}
+                            <div class="text-danger">{{ form.grade.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'admin_panel:enrollment_requests' %}" class="btn btn-secondary">إلغاء</a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> اعتماد التسجيل
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

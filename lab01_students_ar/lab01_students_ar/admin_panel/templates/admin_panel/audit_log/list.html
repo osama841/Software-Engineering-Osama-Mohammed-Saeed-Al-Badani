@@ -1,0 +1,71 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}سجل التدقيق{% endblock %}
+{% block page_title %}سجل التدقيق{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-8">
+        <form method="get" class="d-flex">
+            <input type="text" name="q" class="form-control me-2" placeholder="بحث في سجل التدقيق..." value="{{ query }}">
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="fas fa-search"></i> بحث
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if audit_logs %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>المستخدم</th>
+                                    <th>الإجراء</th>
+                                    <th>النموذج</th>
+                                    <th>الوصف</th>
+                                    <th>التاريخ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in audit_logs %}
+                                <tr>
+                                    <td>{{ log.user.username }}</td>
+                                    <td>
+                                        {% if log.action == 'create' %}
+                                            <span class="badge bg-success">إنشاء</span>
+                                        {% elif log.action == 'update' %}
+                                            <span class="badge bg-info">تحديث</span>
+                                        {% elif log.action == 'delete' %}
+                                            <span class="badge bg-danger">حذف</span>
+                                        {% elif log.action == 'approve' %}
+                                            <span class="badge bg-primary">اعتماد</span>
+                                        {% elif log.action == 'reject' %}
+                                            <span class="badge bg-warning">رفض</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ log.model_name }}</td>
+                                    <td>{{ log.description }}</td>
+                                    <td>{{ log.timestamp|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination could be added here if needed -->
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">لا توجد عمليات تدقيق</h5>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

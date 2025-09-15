@@ -1,0 +1,61 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}حذف الطالب{% endblock %}
+{% block page_title %}حذف الطالب: {{ student.first_name }} {{ student.last_name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">تأكيد حذف الطالب</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>تحذير!</strong> هذه العملية لا يمكن التراجع عنها.
+                </div>
+                
+                <p>هل أنت متأكد أنك تريد حذف الطالب التالي؟</p>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>رقم الطالب:</strong></td>
+                                <td>{{ student.student_id }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>الاسم الكامل:</strong></td>
+                                <td>{{ student.first_name }} {{ student.last_name }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>البريد الإلكتروني:</strong></td>
+                                <td>{{ student.email }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>المستوى:</strong></td>
+                                <td>{{ student.level|default:"غير محدد" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'admin_panel:student_detail' student.id %}" class="btn btn-secondary">إلغاء</a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> حذف الطالب نهائياً
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

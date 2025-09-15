@@ -1,0 +1,90 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}طلبات التسجيل{% endblock %}
+{% block page_title %}طلبات التسجيل{% endblock %}
+
+{% block header_buttons %}
+<a href="{% url 'admin_panel:export_enrollments_csv' %}" class="btn btn-outline-secondary">
+    <i class="fas fa-file-export"></i> تصدير إلى CSV
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-8">
+        <form method="get" class="d-flex">
+            <select name="status" class="form-select me-2">
+                <option value="requested" {% if status == 'requested' %}selected{% endif %}>قيد المراجعة</option>
+                <option value="approved" {% if status == 'approved' %}selected{% endif %}>معتمد</option>
+                <option value="rejected" {% if status == 'rejected' %}selected{% endif %}>مرفوض</option>
+            </select>
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="fas fa-filter"></i> تصفية
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if enrollments %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>الطالب</th>
+                                    <th>المقرر</th>
+                                    <th>الفصل</th>
+                                    <th>حالة الطلب</th>
+                                    <th>التقدير</th>
+                                    <th>تاريخ الطلب</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enrollment in enrollments %}
+                                <tr>
+                                    <td>{{ enrollment.student.first_name }} {{ enrollment.student.last_name }} ({{ enrollment.student.student_id }})</td>
+                                    <td>{{ enrollment.course.code }} - {{ enrollment.course.name }}</td>
+                                    <td>{{ enrollment.semester }}</td>
+                                    <td>
+                                        {% if enrollment.request_status == 'approved' %}
+                                            <span class="badge bg-success">معتمد</span>
+                                        {% elif enrollment.request_status == 'requested' %}
+                                            <span class="badge bg-warning">قيد المراجعة</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">مرفوض</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ enrollment.get_grade_display }}</td>
+                                    <td>{{ enrollment.request_date|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        {% if enrollment.request_status == 'requested' %}
+                                            <a href="{% url 'admin_panel:approve_enrollment' enrollment.id %}" class="btn btn-sm btn-success">
+                                                <i class="fas fa-check"></i> اعتماد
+                                            </a>
+                                            <a href="{% url 'admin_panel:reject_enrollment' enrollment.id %}" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-times"></i> رفض
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">تمت المعالجة</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">لا توجد طلبات تسجيل</h5>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

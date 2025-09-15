@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% block title %}تم إرسال الانطباع{% endblock %} {%
+block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h3 class="mb-0">
+            <i class="fas fa-check-circle"></i> تم إرسال الانطباع بنجاح
+          </h3>
+        </div>
+        <div class="card-body text-center">
+          <p class="lead">
+            شكرًا لك على مشاركة انطباعك. سيتم مراجعة ملاحظاتك من قبل المعلم.
+          </p>
+          <a
+            href="{% url 'feedback:submit_feedback' %}"
+            class="btn btn-primary"
+          >
+            <i class="fas fa-paper-plane"></i> إرسال انطباع آخر
+          </a>
+          <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-home"></i> العودة إلى الصفحة الرئيسية
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

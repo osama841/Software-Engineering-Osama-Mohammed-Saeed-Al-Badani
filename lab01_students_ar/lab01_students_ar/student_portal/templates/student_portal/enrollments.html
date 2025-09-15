@@ -1,0 +1,80 @@
+{% extends 'student_portal/base.html' %}
+
+{% block title %}تسجيلاتي الأكاديمية{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>تسجيلاتي الأكاديمية</h2>
+                <a href="{% url 'student_portal:request_enrollment' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> طلب تسجيل جديد
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">قائمة التسجيلات</h4>
+                </div>
+                <div class="card-body">
+                    {% if enrollments %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>كود المقرر</th>
+                                        <th>اسم المقرر</th>
+                                        <th>الفصل</th>
+                                        <th>المعلم المسؤول</th>
+                                        <th>التقدير</th>
+                                        <th>حالة الطلب</th>
+                                        <th>تاريخ الطلب</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for enrollment in enrollments %}
+                                    <tr>
+                                        <td>{{ enrollment.course.code }}</td>
+                                        <td>{{ enrollment.course.name }}</td>
+                                        <td>{{ enrollment.semester }}</td>
+                                        <td>
+                                            {% if enrollment.course.teacher %}
+                                                {{ enrollment.course.teacher.first_name }} {{ enrollment.course.teacher.last_name }}
+                                            {% else %}
+                                                غير محدد
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ enrollment.get_grade_display }}</td>
+                                        <td>
+                                            {% if enrollment.request_status == 'approved' %}
+                                                <span class="badge bg-success">معتمد</span>
+                                            {% elif enrollment.request_status == 'requested' %}
+                                                <span class="badge bg-warning">قيد المراجعة</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">مرفوض</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ enrollment.request_date|date:"d/m/Y H:i" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">لا توجد تسجيلات أكاديمية</h5>
+                            <p class="text-muted">يمكنك طلب التسجيل في المقررات الأكاديمية باستخدام الزر أعلاه.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

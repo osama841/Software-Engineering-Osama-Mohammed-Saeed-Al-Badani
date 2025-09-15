@@ -1,0 +1,42 @@
+{% extends 'student_portal/base.html' %}
+
+{% block title %}طلب تسجيل في مقرر{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">طلب تسجيل في مقرر</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="course" class="form-label">اختر المقرر *</label>
+                            <select name="course" id="course" class="form-select" required>
+                                <option value="">-- اختر مقرر --</option>
+                                {% for course in courses %}
+                                    <option value="{{ course.id }}">{{ course.code }} - {{ course.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="semester" class="form-label">الفصل الدراسي *</label>
+                            <input type="text" name="semester" id="semester" class="form-control" value="{{ current_semester }}" required>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'student_portal:student_enrollments' %}" class="btn btn-secondary">إلغاء</a>
+                            <button type="submit" class="btn btn-primary">إرسال الطلب</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

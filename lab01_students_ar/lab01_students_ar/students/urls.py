@@ -3,8 +3,8 @@ from django.urls import path
 from . import views  # يكفي هذا الاستيراد (لا تحتاج from .views import ...)
 
 urlpatterns = [
-    # الصفحة الرئيسية
-    path('', views.home, name='home'),
+    # الصفحة الرئيسية للإدارة (تم نقلها للمسار الرئيسي)
+    # path('', views.home, name='home'),  # تم إزالتها لتجنب التعارض
 
     # ========================= الطلاب =========================
     path('students/', views.student_list, name='student_list'),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('students/<int:pk>/edit/', views.student_update, name='student_update'),
     path('students/<int:pk>/delete/', views.student_delete, name='student_delete'),
     path('students/export/csv/', views.students_export_csv, name='students_export_csv'),
+    path('my-profile/', views.student_profile, name='student_profile'),
 
     # ========================= المقررات =========================
     path('courses/', views.course_list, name='course_list'),

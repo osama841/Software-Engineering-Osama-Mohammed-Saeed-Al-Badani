@@ -1,0 +1,67 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}حذف المقرر{% endblock %}
+{% block page_title %}حذف المقرر: {{ course.code }} - {{ course.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">تأكيد حذف المقرر</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>تحذير!</strong> هذه العملية لا يمكن التراجع عنها.
+                </div>
+                
+                <p>هل أنت متأكد أنك تريد حذف المقرر التالي؟</p>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>كود المقرر:</strong></td>
+                                <td>{{ course.code }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>اسم المقرر:</strong></td>
+                                <td>{{ course.name }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>الساعات:</strong></td>
+                                <td>{{ course.credit_hours }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>المعلم المسؤول:</strong></td>
+                                <td>
+                                    {% if course.teacher %}
+                                        {{ course.teacher.first_name }} {{ course.teacher.last_name }}
+                                    {% else %}
+                                        غير محدد
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'admin_panel:course_detail' course.id %}" class="btn btn-secondary">إلغاء</a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> حذف المقرر نهائياً
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

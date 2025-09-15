@@ -1,0 +1,101 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}تفاصيل المقرر{% endblock %}
+{% block page_title %}تفاصيل المقرر: {{ course.code }} - {{ course.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">معلومات المقرر</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td><strong>كود المقرر:</strong></td>
+                        <td>{{ course.code }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>اسم المقرر:</strong></td>
+                        <td>{{ course.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>الساعات:</strong></td>
+                        <td>{{ course.credit_hours }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>المعلم المسؤول:</strong></td>
+                        <td>
+                            {% if course.teacher %}
+                                {{ course.teacher.first_name }} {{ course.teacher.last_name }}
+                            {% else %}
+                                <span class="text-muted">غير محدد</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>تاريخ الإنشاء:</strong></td>
+                        <td>{{ course.created_at|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                </table>
+                
+                <div class="d-grid gap-2">
+                    <a href="{% url 'admin_panel:edit_course' course.id %}" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> تعديل
+                    </a>
+                    <a href="{% url 'admin_panel:delete_course' course.id %}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> حذف
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">الطلاب المسجلون في هذا المقرر</h5>
+            </div>
+            <div class="card-body">
+                {% if enrollments %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>رقم الطالب</th>
+                                    <th>اسم الطالب</th>
+                                    <th>الفصل</th>
+                                    <th>التقدير</th>
+                                    <th>حالة الطلب</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enrollment in enrollments %}
+                                <tr>
+                                    <td>{{ enrollment.student.student_id }}</td>
+                                    <td>{{ enrollment.student.first_name }} {{ enrollment.student.last_name }}</td>
+                                    <td>{{ enrollment.semester }}</td>
+                                    <td>{{ enrollment.get_grade_display }}</td>
+                                    <td>
+                                        {% if enrollment.request_status == 'approved' %}
+                                            <span class="badge bg-success">معتمد</span>
+                                        {% elif enrollment.request_status == 'requested' %}
+                                            <span class="badge bg-warning">قيد المراجعة</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">مرفوض</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">لا يوجد طلاب مسجلون في هذا المقرر حالياً.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

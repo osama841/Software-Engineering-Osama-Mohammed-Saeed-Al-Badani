@@ -19,36 +19,11 @@
             <i class="fas fa-home"></i> الرئيسية
           </a>
         </li>
+
+        <!-- Feedback link for all users -->
         <li class="nav-item">
-          <a
-            class="nav-link {% if request.resolver_match.url_name in 'student_list,student_create,student_update,student_delete' %}active{% endif %}"
-            href="{% url 'student_list' %}"
-          >
-            <i class="fas fa-user-graduate"></i> الطلاب
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link {% if request.resolver_match.url_name in 'teacher_list,teacher_create,teacher_update,teacher_delete' %}active{% endif %}"
-            href="{% url 'teacher_list' %}"
-          >
-            <i class="fas fa-chalkboard-teacher"></i> المعلمون
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link {% if request.resolver_match.url_name in 'course_list,course_create,course_update,course_delete' %}active{% endif %}"
-            href="{% url 'course_list' %}"
-          >
-            <i class="fas fa-book"></i> المقررات
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link {% if request.resolver_match.url_name in 'enrollment_list,enrollment_create,enrollment_update,enrollment_delete' %}active{% endif %}"
-            href="{% url 'enrollment_list' %}"
-          >
-            <i class="fas fa-clipboard-list"></i> التسجيلات
+          <a class="nav-link" href="{% url 'feedback:submit_feedback' %}">
+            <i class="fas fa-comment"></i> إرسال انطباع
           </a>
         </li>
       </ul>
@@ -66,8 +41,13 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
+              <a class="dropdown-item" href="{% url 'users:dashboard_redirect' %}"
+                ><i class="fas fa-tachometer-alt"></i> لوحة التحكم</a
+              >
+            </li>
+            <li>
               <a class="dropdown-item" href="{% url 'users:profile' %}"
-                ><i class="fas fa-user-circle"></i> ال ملف الشخصي</a
+                ><i class="fas fa-user-circle"></i> الملف الشخصي</a
               >
             </li>
             <li><hr class="dropdown-divider" /></li>
@@ -83,13 +63,13 @@
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}"
-            ><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a
+          <a class="nav-link" href="{% url 'users:register' %}"
+            ><i class="fas fa-user-plus"></i> إنشاء حساب</a
           >
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'users:register' %}"
-            ><i class="fas fa-user-plus"></i> إنشاء حساب</a
+          <a class="nav-link" href="{% url 'login' %}"
+            ><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a
           >
         </li>
         {% endif %}
